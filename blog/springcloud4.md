@@ -105,4 +105,45 @@
 - 接着关闭service-hi服务,再次访问 http://localhost:8282/hi ,浏览器显示
 ![](/img/0017.png)
 
-### ok 至此Riboon和Feign实现Hystrix都搞定了
+
+##Hystrix Dashboard (断路器：Hystrix 仪表盘)
+- 基于service-ribbon 改造 , Feign的改造和这一样.
+  - 首先引入pom依赖
+  
+  		<!-- 应用健康监控 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- 断路器 仪表盘 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
+		</dependency> 
+
+  - 入口中加入@EnableHystrixDashboard注解开启HystrixDashboard
+  
+		@SpringBootApplication
+		@EnableDiscoveryClient
+		@EnableHystrix
+		@EnableHystrixDashboard
+		public class RibbonApp {
+		
+			public static void main(String[] args) {
+				SpringApplication.run(RibbonApp.class, args);
+			}
+		
+			@Bean
+			@LoadBalanced
+			RestTemplate restTemplate() {
+				return new RestTemplate();
+			}
+		
+		}
+
+  - 打开浏览器  访问http://localhost:8281/hystrix 界面如下:
+  ![](/img/0018.png)
+
+  - 点击按钮进入到监控界面, 访问http://localhost:8281/hi
+  监控页面会监控访问信息
+  ![](/img/0019.png)
