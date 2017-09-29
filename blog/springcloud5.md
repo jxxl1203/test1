@@ -96,3 +96,58 @@ Zuul的主要功能是路由转发和过滤器。路由功能是微服务的一�
 - 浏览器正常显示: 
 ![](/img/0020.png)
 - 说明zuul起到了路由的作用
+
+## 服务过滤
+
+- zuul还提供了用于安全过滤的方法,继续改造工程
+
+		@Component
+		public class MyFilter extends ZuulFilter {
+			
+			/**
+			 * filterType：返回一个字符串代表过滤器的类型，在zuul中定义了四种不同生命周期的过滤器类型，具体如下： 
+			 * pre：路由之前
+			 * routing：路由之时 
+			 * post： 路由之后 
+			 * error：发送错误调用
+			 */
+		
+			@Override
+			public String filterType() {
+				return "pre";
+			}
+
+			@Override
+			public Object run() {
+				RequestContext ctx = RequestContext.getCurrentContext();
+		        HttpServletRequest request = ctx.getRequest();
+		        Object accessToken = request.getParameter("token");
+		        if(accessToken == null) {
+		            ctx.setSendZuulResponse(false);
+		            ctx.setResponseStatusCode(401);
+		            try {
+		                ctx.getResponse().getWriter().write("token is empty");
+		            }catch (Exception e){}
+		
+		            return null;
+		        }
+		        return null;
+			}
+		
+			@Override
+			public boolean shouldFilter() {
+				return true;
+			}
+		
+			@Override
+			public int filterOrder() {
+				return 0;
+			}
+		}
+
+- 启动项目 
+	- 访问 http://localhost:8280/api-a/hi 显示
+	![](/img/0021.png)
+	
+	- 访问  
+	![](/img/0022.png)
