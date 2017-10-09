@@ -234,7 +234,7 @@ https://github.com/jxxl1203/config-repo-demo/
 
 - 接着访问 http://localhost:8888/config-dev.yml 成功显示: 
 ![](/img/0027.png)
-	(中文编码问题稍后会将)
+	(中文编码问题稍后会讲)
 
 - 后来仔细看了人家写的博客  :	{application}-{profile}.yml
 	发现{profile}用的是大括号....
